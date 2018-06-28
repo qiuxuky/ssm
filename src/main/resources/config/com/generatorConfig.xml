@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!-- 引入配置文件 -->
+	<properties resource="config/properties/generator.properties" />
+	<!-- 数据库驱动位置 -->
+	<classPathEntry location="${classPath}" />
+	<!-- 一个数据库一个context, targetRuntime:此属性用于指定生成的代码的运行时环境 ,MyBatis3:*这是默认值*,MyBatis3Simple不生成Example查询(避免后面一个一个表设置) 
+		defaultModelType:如何生成实体类,flat表示为每一张表生成一个实体类，推荐使用 -->
+	<context id="test" targetRuntime="MyBatis3Simple"
+		defaultModelType="flat">
+		<!--通用 Mapper 插件，可以生成带注解的实体类 -->
+		<plugin type="com.qiuxu.common.myplugin.BaseDaoPlugin">
+			<property name="mappers" value="com.qiuxu.common.persistence.BaseDao" />
+			<property name="caseSensitive" value="true" />
+			<property name="forceAnnotation" value="true" />
+		</plugin>
+		<!-- 生成业务方法-->
+        <plugin type="com.qiuxu.common.myplugin.BaseServicePlugin">
+            <!--name:baseService的名称-->
+            <property name="name" value="BaseService"></property>
+            <!--name:baseService存放的包名-->
+            <property name="targetPackageBaseService" value="com.qiuxu.common.persistence"></property>
+            <!--baseService 实现存放的包-->
+            <property name="targetPackageBaseServiceImpl" value="com.qiuxu.common.persistence.impl"></property>
+            <!--baseService所在的工程-->
+            <property name="targetBaseServiceProject" value="${project}"></property>
+            <property name="targetBaseServiceImplProject" value="${project}"></property>
+
+
+            <!--业务接口存放的包名-->
+            <property name="targetPackageBusinessService" value="com.qiuxu.ssm.service"></property>
+            <!--业务接口的实现-->
+            <property name="targetPackageBusinessServiceImpl" value="com.qiuxu.ssm.service.impl"></property>
+            <!--业务所在的工程-->
+            <property name="targetBusinessServiceProject" value="${project}"></property>
+
+            <!--业务所在的工程-->
+            <property name="targetBusinessServiceImplProject" value="${project}"></property>
+
+            <property name="searchString" value="Example"></property>
+            <property name="replaceString" value="Criteria"></property>
+            <!--baseDao接口的完全限定名-->
+            <property name="baseDaoPackage" value="com.qiuxu.common.persistence.BaseDao"></property>
+        </plugin>
+		<!-- 注释 type表示自定义注释 -->
+		<commentGenerator>
+			<!-- 是否取消注释 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		<!-- 数据库的url、用户名、密码 -->
+		<jdbcConnection driverClass="${jdbc.driver}"
+			connectionURL="${jdbc.url}" userId="${jdbc.user}" password="${jdbc.password}">
+		</jdbcConnection>
+		<!-- 类型转换 -->
+		<javaTypeResolver>
+			<!-- 是否使用bigDecimal， false可自动转化以下类型(Long, Integer, Short, etc.) -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="${package_domain}"
+			targetProject="${project}">
+			<!-- 是否在当前路径下新加一层schema,eg：fase路径com.goshop.domain"， true:com.goshop.domain".[schemaName] -->
+			<property name="enableSubPackages" value="false" />
+			<!-- 是否针对string类型的字段在set的时候进行trim调用 -->
+			<property name="trimStrings" value="true" />
+			<property name="rootClass" value="com.qiuxu.common.persistence.BaseEntity"/>
+		</javaModelGenerator>
+		<!-- 生成的映射文件包名和位置 -->
+		<sqlMapGenerator targetPackage="${package_mapper}"
+			targetProject="${resource}">
+			<!-- 是否在当前路径下新加一层schema,eg：fase路径com.goshop.domain"， true:com.goshop.domain".[schemaName] -->
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!-- 生成DAO的包名和位置 type 1、ANNOTATEDMAPPER注解形式 2、XMLMAPPER xml配置文件形式 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="${package_dao}" targetProject="${project}">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<table tableName="sys_user" domainObjectName="User" mapperName="UserDao" />
+	</context>
+</generatorConfiguration>

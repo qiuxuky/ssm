@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxu.ssm.dao.UserDao">
+  <resultMap id="BaseResultMap" type="com.qiuxu.ssm.domain.User">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+  </resultMap>
+  <sql id="sql_columns">
+    user_id,user_name,password,mobile,email
+  </sql>
+  <sql id="sql_where">
+    <where>
+  <if test="null != item.userId and '' != item.userId">
+     and user_id = #{item.userId}
+  </if>
+  <if test="null != item.userName and '' != item.userName">
+     and user_name = #{item.userName}
+  </if>
+  <if test="null != item.password and '' != item.password">
+     and password = #{item.password}
+  </if>
+  <if test="null != item.mobile and '' != item.mobile">
+     and mobile = #{item.mobile}
+  </if>
+  <if test="null != item.email and '' != item.email">
+     and email = #{item.email}
+  </if>
+</where>
+  </sql>
+  <sql id="sql_update">
+    <if test="null != item.userId and '' != item.userId">
+       , user_id = #{item.userId}
+    </if>
+    <if test="null != item.userName and '' != item.userName">
+       , user_name = #{item.userName}
+    </if>
+    <if test="null != item.password and '' != item.password">
+       , password = #{item.password}
+    </if>
+    <if test="null != item.mobile and '' != item.mobile">
+       , mobile = #{item.mobile}
+    </if>
+    <if test="null != item.email and '' != item.email">
+       , email = #{item.email}
+    </if>
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap">
+    select 
+    <include refid="sql_columns" />
+     from sys_user
+     where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectOne" resultMap="BaseResultMap">
+    select 
+    <include refid="sql_columns" />
+     from sys_user
+    <include refid="sql_where" />
+  </select>
+  <select id="selectList" resultMap="BaseResultMap">
+    select 
+    <include refid="sql_columns" />
+     from sys_user
+    <include refid="sql_where" />
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="sql_columns" />
+     from sys_user
+    <include refid="sql_where" />
+     limit #{page.startRow}, #{page.pageSize}
+  </select>
+  <select id="count" resultType="int">
+    select count(*) from sys_user
+    <include refid="sql_where" />
+  </select>
+  <insert id="save" keyProperty="userId" useGeneratedKeys="true">
+    insert into sys_user(user_id,user_name,password,mobile,email) values( #{item.userId}, #{item.userName}, #{item.password}, #{item.mobile}, #{item.email})
+  </insert>
+  <insert id="batchSave">
+    insert into sys_user(user_id,user_name,password,mobile,email) values
+    <foreach collection="list" index="index" item="item" separator=",">
+      ( #{item.userId}, #{item.userName}, #{item.password}, #{item.mobile}, #{item.email})
+    </foreach>
+  </insert>
+  <update id="update">
+    update sys_user set user_id = #{userId}
+    <include refid="sql_update" />
+     where user_id = #{userId}
+  </update>
+  <update id="batchUpdate">
+    <foreach close="" collection="list" index="index" item="item" open="" separator=";">
+      update sys_user set user_id = #{item.userId}
+      <include refid="sql_update" />
+       where user_id = #{userId}
+    </foreach>
+  </update>
+  <delete id="delArray">
+    delete from sys_user where user_id in
+    <foreach close=")" collection="array" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+  <delete id="delList">
+    delete from sys_user where user_id in
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+</mapper>

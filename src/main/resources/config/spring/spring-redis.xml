@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- jedis 连接池配置 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig"
+		p:maxIdle="${redis.maxIdle}"
+		p:maxWaitMillis="${redis.maxWait}"
+		p:maxTotal="${redis.maxTotal}" 
+		p:testOnBorrow="${redis.testOnBorrow}" /><!-- 返回连接时，检测连接是否成功 -->
+
+	<bean id="jedisConnectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		p:hostName="${redis.host}"
+		p:port="${redis.port}"
+		p:password="${redis.password}"
+		p:database="${redis.database}"
+		p:poolConfig-ref="poolConfig"/>
+
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+		p:connectionFactory-ref="jedisConnectionFactory" 
+		p:keySerializer-ref="strRedisSerializer"
+		p:valueSerializer-ref="jdkRedisSerializer" 
+		p:hashKeySerializer-ref="strRedisSerializer" />
+
+	<bean id="strRedisSerializer"
+		class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+	<bean id="jdkRedisSerializer"
+		class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+	
+	<bean id="redisCache" class="com.qiuxu.common.cache.RedisCacheImpl"/>
+</beans>

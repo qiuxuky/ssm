@@ -1,0 +1,32 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<mvc:annotation-driven />
+
+	<context:component-scan base-package="com.qiuxu.ssm" use-default-filters="false">
+		 <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 对模型视图名称的解析,在请求时模型视图名称添加前后缀 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/view/" /> <!-- 前缀 -->
+		<property name="suffix" value=".jsp" />   <!-- 后缀 -->
+	</bean>
+
+	<!-- 将springmvc不能处理的请求交给tomcat处理 -->
+	<mvc:default-servlet-handler />
+	
+	<!-- 对静态资源的映射 -->
+	<mvc:resources mapping="/static/**" location="/static/" />
+
+
+
+
+</beans>

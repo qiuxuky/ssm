@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<context:property-placeholder location="classpath:config/properties/db.properties,classpath:config/properties/redis.properties" />
+	
+	<context:component-scan base-package="com.qiuxu.ssm">
+		<!-- 排除扫描Controller控制器 -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<!-- 静态bean注入工具类 -->
+	<bean class="com.qiuxu.common.util.SpringContextUtil"/>
+
+	<import resource="classpath:config/spring/spring-mybatis.xml"/>
+	<import resource="classpath:config/spring/spring-redis.xml"/>
+	<import resource="classpath:config/spring/spring-solr.xml"/>
+	
+</beans>
